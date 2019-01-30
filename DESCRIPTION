@@ -1,25 +1,14 @@
 Package: forestdegrad
 Title: Identify forest degradation in satellite images
-Version: 0.0.0.9000
+Version: 0.0.0.9001
 Authors@R: 
     person(given = "First",
            family = "Last",
            role = c("aut", "cre"),
            email = "first.last@example.com")
 Description: What the package does (one paragraph).
+Depends: R (>= 3.1.0)
 License: GPL-2 | file LICENSE
 Encoding: UTF-8
 LazyData: true
-Imports:
-  caret,
-  dplyr,
-  dtw,
-  methods,
-  proxy,
-  raster,
-  sf,
-  sits,
-  sits.prodes,
-  tibble,
-  units
 RoxygenNote: 6.1.1
