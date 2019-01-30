@@ -14,7 +14,7 @@ tiles <- "h11v09"
 bands <- c("ndvi", "evi", "nir", "mir", "red", "blue")
 years <- 2000:2018
 cores <- floor(parallel::detectCores() * 3/4)
-mem <- 64
+mem <- 96
 
 brick_type <- "mod13"
 
@@ -43,11 +43,11 @@ brick_tb <- brick_path %>% list.files(full.names = TRUE, pattern = '*tif') %>%
 
 # train
 samples_tb <- readRDS(system.file("extdata", "samples.rds", package = "forestdegrad"))
-svm_model <- sits_train(samples_tb, sits_svm())
+sits_model <- sits_train(samples_tb, sits_svm())
 
-
-res <- lapply(brick_tb$pathrow, function(pr, years, brick_tb, cores, mem, sits_model){
-    lapply(years, function(yr, pr, brick_tb, cores, mem, sits_model){
+for(pr in unique(brick_tb$pathrow)){
+    for(yr in years){
+        print(paste("Classifying ", pr, yr, "..."))
         bricks <- brick_tb %>% dplyr::filter(pathrow == pr, year == yr)
         if (stringr::str_detect(brick_type, "^l8mod.+"))
             cov_timeline <- seq(from = as.Date(unique(bricks$start_date)[1]), by = 16, length.out = 23)
@@ -60,8 +60,8 @@ res <- lapply(brick_tb$pathrow, function(pr, years, brick_tb, cores, mem, sits_m
                                ml_model = sits_model,
                                memsize = mem,
                                multicores = cores)
-    }, pr = pr, brick_tb = brick_tb, cores = cores, mem = mem, sits_model = sits_model)
-}, years = years, brick_tb = brick_tb, cores = cores, mem = mem, sits_model = svm_model)
+    }
+}
 
-print(res)
+print("Finished!")
 
