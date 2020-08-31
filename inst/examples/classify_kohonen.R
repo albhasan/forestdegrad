@@ -22,7 +22,7 @@ mem <- 96
 brick_type <- "mod13"
 
 base_path <- "/home/alber/Documents/data/experiments/amazon_degradation"
-result_path <- file.path(base_path, "results")
+result_path <- file.path(base_path, "results_kohonen")
 stopifnot(all(vapply(c(base_path, result_path), dir.exists, logical(1))))
 
 path_to_bricks <- c(
@@ -45,7 +45,9 @@ brick_tb <- brick_path %>% list.files(full.names = TRUE, pattern = '*tif') %>%
                          err_desc = "Some bands are unavailable")
 
 # train
-data(list = "degrad_samples.rda", package = "forestdegrad")
+data(list = "degrad_samples", package = "forestdegrad")
+samples_tb <- degrad_samples
+rm(degrad_samples)
 sits_model <- sits_train(samples_tb, sits_svm())
 
 # classify
